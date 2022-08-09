@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "qmOXbr2Msp6NTzjfCoqe6BB53xgpj8n0B5j8dTil9rGvjjB8PWTnZHI56aIFjMy9UwKcOanwEOl9W5DbBASH2Q==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Presco\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\Exlight\\Exlight.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Presco\\.nuget\\packages\\tmodloader.codeassist\\0.1.5\\tmodloader.codeassist.0.1.5.nupkg.sha512"
+  ],
+  "logs": []
+}
