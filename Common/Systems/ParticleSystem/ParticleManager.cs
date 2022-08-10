@@ -79,14 +79,17 @@ namespace Exlight.Common.Systems.ParticleSystem
 
         public static void Update()
         {
-            foreach (Particle particle in Particles)
+            if (Particles != null)
             {
-                particle.Position += particle.Velocity;
-                particle.LifeTime++;
-                particle.Update();
+                foreach (Particle particle in Particles)
+                {
+                    particle.Position += particle.Velocity;
+                    particle.LifeTime++;
+                    particle.Update();
+                }
+                Particles.RemoveAll((Particle particle) => (particle.LifeTime >= particle.MaxTime) || (ParticlesToBeKilled.Contains(particle)));
+                ParticlesToBeKilled.Clear();
             }
-            Particles.RemoveAll((Particle particle) => (particle.LifeTime >= particle.MaxTime) || (ParticlesToBeKilled.Contains(particle)));
-            ParticlesToBeKilled.Clear();
         }
 
         public static void KillParticle(Particle particle)
