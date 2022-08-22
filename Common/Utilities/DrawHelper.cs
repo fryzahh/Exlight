@@ -1,8 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Terraria.GameContent;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using System;
 
 namespace Exlight.Common.Utilities
 {

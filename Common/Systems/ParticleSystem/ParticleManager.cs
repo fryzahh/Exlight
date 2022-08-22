@@ -87,7 +87,7 @@ namespace Exlight.Common.Systems.ParticleSystem
                     particle.LifeTime++;
                     particle.Update();
                 }
-                Particles.RemoveAll((Particle particle) => (particle.LifeTime >= particle.MaxTime) || (ParticlesToBeKilled.Contains(particle)));
+                Particles.RemoveAll((Particle particle) => (particle.LifeTime >= particle.MaxTime && particle.HasSetLifetime) || (ParticlesToBeKilled.Contains(particle)));
                 ParticlesToBeKilled.Clear();
             }
         }

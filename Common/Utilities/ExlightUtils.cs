@@ -4,6 +4,7 @@ using Terraria;
 using Microsoft.Xna.Framework;
 using System;
 using System.IO;
+using System.Linq;
 using Terraria.DataStructures;
 using System.Linq;
 using System.Collections.Generic;
@@ -71,22 +72,7 @@ namespace Exlight.Common.Utilities
 				{
 					if (projectile.active && projectile.type == types[j])
 					{
-						projectile.active = false;
-					}
-				}
-			}
-		}
-
-		public static IEnumerable<NPC> IsNPCActive(params int[] types)
-		{
-			for (int i = 0; i < Main.maxNPCs; i++)
-			{
-				NPC npc = Main.npc[i];
-				for (int j = 0; j < types.Length; j++)
-				{
-					if (npc.active && npc.type == types[j])
-					{
-						yield return npc;
+						projectile.Kill();
 					}
 				}
 			}
@@ -97,12 +83,9 @@ namespace Exlight.Common.Utilities
 			for (int i = 0; i < Main.maxProjectiles; i++)
 			{
 				Projectile projectile = Main.projectile[i];
-				for (int j = 0; j < types.Length; j++)
+				if (projectile.active && types.Contains(projectile.type))
 				{
-					if (projectile.active && projectile.type == types[j])
-					{
-						yield return projectile;
-					}
+					yield return projectile;
 				}
 			}
 		}
@@ -120,9 +103,8 @@ namespace Exlight.Common.Utilities
 			ExpandProjectileHitbox(projectile, newSize, newSize);
 		}
 
-		public static void SpawnNPCRotatersForNPC(int whoAmI, int radius, float speed, int type, int damage, int amount, bool clockwise)
+		public static void SpawnNPCRotatersForNPC(NPC npc, int radius, float speed, int type, int damage, int amount, bool clockwise)
 		{
-			NPC npc = Main.npc[whoAmI];
 			if (Main.netMode == NetmodeID.MultiplayerClient)
 			{
 				return;
@@ -155,9 +137,8 @@ namespace Exlight.Common.Utilities
 			}
 		}
 
-		public static void SpawnProjectileRotatersForProjectile(int whoAmI, int radius, float speed, int type, int damage, int amount, bool clockwise)
+		public static void SpawnProjectileRotatersForProjectile(Projectile projectile, int radius, float speed, int type, int damage, int amount, bool clockwise)
 		{
-			Projectile projectile = Main.projectile[whoAmI];
 			if (Main.netMode == NetmodeID.MultiplayerClient)
 			{
 				return;

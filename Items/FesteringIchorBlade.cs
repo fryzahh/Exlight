@@ -1,3 +1,7 @@
+using Exlight.Common.Systems.ParticleSystem;
+using Exlight.Particles;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -28,6 +32,30 @@ namespace Exlight.Items
 			Item.autoReuse = true;
 			Item.shoot = ModContent.ProjectileType<Projectiles.Weapons.Melee.FesteringIchorBall>();
 			Item.shootSpeed = 8f;
+		}
+
+		public override void PostUpdate()
+		{
+			for (int k = 0; k < 1; k++)
+			{
+				Vector2 val5 = Item.Center + Main.rand.NextVector2CircularEdge(100, 100);
+				Vector2 v = val5 - Item.Center;
+				v = v.SafeNormalize(Vector2.Zero) * -3f;
+				Color color = Color.Lerp(Color.Yellow, Color.Orange, Main.rand.NextFloat(0.1f, 0.9f));
+				ParticleManager.SpawnParticle(new BasicGlowParticle(val5, v, color, Main.rand.NextFloat(0.25f, 0.46f), Main.rand.Next(180, 191), false, true));
+			}
+		}
+
+		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
+		{
+			for (int k = 0; k < 3; k++)
+			{
+				Vector2 val5 = Item.Center + Main.rand.NextVector2CircularEdge(Item.width / 2, Item.height / 2);
+				Vector2 v = Vector2.Zero.SafeNormalize(val5 - Item.Center) * -8f;
+				Color color = Color.Lerp(Color.Yellow, Color.Orange, Main.rand.NextFloat(0.1f, 0.9f));
+				ParticleManager.SpawnParticle(new BasicGlowParticle(val5, v, color, Main.rand.NextFloat(0.25f, 0.66f), Main.rand.Next(60, 70), false, false));
+			}
+			return true;
 		}
 
 		public override void AddRecipes()

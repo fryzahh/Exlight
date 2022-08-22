@@ -29,6 +29,8 @@ namespace Exlight.Common.Systems.ParticleSystem
         }
         public virtual string Texture => "";
 
+        public virtual bool HasSetLifetime => false;
+
         public virtual bool UseCustomDrawing => false;
 
         public virtual bool UseAdditiveBlending => false;
