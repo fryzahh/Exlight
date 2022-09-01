@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ using Terraria.ModLoader.Core;
 
 namespace Exlight.Common.Systems.ParticleSystem
 {
-    public static class ParticleManager
+    public class ParticleManager
     {
         const int MaxParticles = 3000;
 
@@ -120,10 +121,11 @@ namespace Exlight.Common.Systems.ParticleSystem
                 spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.ZoomMatrix);
                 foreach (Particle particle in ParticlesUsingAdditiveBlend)
                 {
+                    Rectangle rec = ParticleTextures[particle.Type].Frame(1, particle.ParticleFrameCount, 0, particle.Frame);
                     if (particle.UseCustomDrawing)
                         particle.CustomDrawing(spriteBatch);
                     else
-                        spriteBatch.Draw(ParticleTextures[particle.Type], particle.Position - Main.screenPosition, null, particle.Color, particle.Rotation, particle.Origin, particle.Scale * Main.GameViewMatrix.Zoom, SpriteEffects.None, 0f);
+                        spriteBatch.Draw(ParticleTextures[particle.Type], particle.Position - Main.screenPosition, rec, particle.Color, particle.Rotation, particle.Origin, particle.Scale * Main.GameViewMatrix.Zoom, SpriteEffects.None, 0f);
                 }
                 spriteBatch.End();
             }
@@ -132,10 +134,11 @@ namespace Exlight.Common.Systems.ParticleSystem
                 spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.ZoomMatrix);
                 foreach (Particle particle in ParticlesUsingAlphaBlend)
                 {
+                    Rectangle rec = ParticleTextures[particle.Type].Frame(1, particle.ParticleFrameCount, 0, particle.Frame);
                     if (particle.UseCustomDrawing)
                         particle.CustomDrawing(spriteBatch);
                     else
-                        spriteBatch.Draw(ParticleTextures[particle.Type], particle.Position - Main.screenPosition, null, particle.Color, particle.Rotation, particle.Origin, particle.Scale * Main.GameViewMatrix.Zoom, SpriteEffects.None, 0f);
+                        spriteBatch.Draw(ParticleTextures[particle.Type], particle.Position - Main.screenPosition, rec, particle.Color, particle.Rotation, particle.Origin, particle.Scale * Main.GameViewMatrix.Zoom, SpriteEffects.None, 0f);
                 }
                 spriteBatch.End();
             }

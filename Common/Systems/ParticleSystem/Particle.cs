@@ -15,6 +15,7 @@ namespace Exlight.Common.Systems.ParticleSystem
         public Vector2 Velocity;
         public Color Color;
         public float Scale;
+        public int Frame;
 
         public float ParticleLifeCompletion
         {
@@ -27,6 +28,9 @@ namespace Exlight.Common.Systems.ParticleSystem
                 return LifeTime / MaxTime;
             }
         }
+
+        public virtual int ParticleFrameCount => 1;
+
         public virtual string Texture => "";
 
         public virtual bool HasSetLifetime => false;
