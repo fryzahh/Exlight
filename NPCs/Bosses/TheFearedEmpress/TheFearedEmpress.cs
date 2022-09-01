@@ -48,7 +48,7 @@ namespace Exlight.NPCs.Bosses.TheFearedEmpress
             ExplosiveIchorClones,
             DualHandSmashes,
             DualHandDashes,
-            LeftHandSamsh,
+            LeftHandSmash,
             LeftHandDash,
             RightHandSmash,
             RightHandDash,
@@ -191,8 +191,20 @@ namespace Exlight.NPCs.Bosses.TheFearedEmpress
             {
                 int lefty = ExlightUtils.NewNPCBetter(NPC.Center, ModContent.NPCType<TheFearedEmpressHandLeft>(), ai1: NPC.whoAmI);
                 int righty = ExlightUtils.NewNPCBetter(NPC.Center, ModContent.NPCType<TheFearedEmpressHandRight>(), ai1: NPC.whoAmI);
-                PhaseTwo = !Main.npc[lefty].active && !Main.npc[righty].active;
                 HasSpawnedArmsYet = true;
+            }
+            else
+            {
+                PhaseTwo = NPC.CountNPCS(ModContent.NPCType<TheFearedEmpressHandLeft>()) < 1 && ModContent.NPCType<TheFearedEmpressHandRight>() < 1;
+            }
+
+            if (PhaseTwo)
+            {
+                NPC.dontTakeDamage = false;
+            }
+            else
+            {
+                NPC.dontTakeDamage = true;
             }
 
             /*IEnumerable<Projectile> ringSpawner = ExlightUtils.IsProjectileActive(ModContent.ProjectileType<IchorRingSpawner>());
@@ -235,11 +247,12 @@ namespace Exlight.NPCs.Bosses.TheFearedEmpress
                     break;
 
                 case EmpressAttacks.DualHandSmashes:
-                    DoHandAttacks(player, player.Center - Vector2.UnitY * 300, 1200, 15f, 60f);
-                    break;
-
                 case EmpressAttacks.DualHandDashes:
-                    DoHandDashes(player);
+                case EmpressAttacks.LeftHandSmash:
+                case EmpressAttacks.LeftHandDash:
+                case EmpressAttacks.RightHandSmash:
+                case EmpressAttacks.RightHandDash:
+                    DoHandAttacks(player, false);
                     break;
 
                 case EmpressAttacks.SwordBarrages:
@@ -283,7 +296,7 @@ namespace Exlight.NPCs.Bosses.TheFearedEmpress
             NPCHelper.SmoothTurnMovement(NPC.whoAmI, target, speed, turnResist);
             if (++AttackTimer[0] >= 180)
             {
-                SelectNextAttack(1, 2, 4, 5, 6, 7, 15);
+                SelectNextAttack(1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 15);
             }
         }
 
@@ -543,8 +556,7 @@ namespace Exlight.NPCs.Bosses.TheFearedEmpress
         }
 
         public void DoSwordCircles(Player player, bool phaseTwo, bool enraged)
-        {
-            
+        {          
             AttackTimer[0]++;
             if (AttackTimer[0] < 60)
             {
@@ -685,44 +697,30 @@ namespace Exlight.NPCs.Bosses.TheFearedEmpress
             }
         }
 
-        public void DoHandAttacks(Player player, Vector2 playerPos, int time, float speed, float turnResist)
+        public void DoHandAttacks(Player player, bool shouldDecreaseOpacity)
         {
-            AttackTimer[0]++;
-            if (AttackTimer[0] < time)
-            {
-                Vector2 spawnPos = playerPos;
-                NPCHelper.SmoothTurnMovement(NPC.whoAmI, spawnPos, speed, turnResist);
-            }
-            else
-            {
-                SelectNextAttack(0);
-            }
-        }
-
-        public void DoHandDashes(Player player)
-        {
-            Vector2 spawnPos = player.Center - Vector2.UnitY * 350f;
-            NPCHelper.SmoothTurnMovement(NPC.whoAmI, spawnPos, 20f, 50f);
+            Vector2 pos = player.Center - Vector2.UnitY * 250f;
+            NPCHelper.SmoothTurnMovement(NPC.whoAmI, pos, 35f, 50f);
             if (AttackTimer[0] == 0f)
             {
                 drawHealthBar = false;
-                NPC.Opacity = MathHelper.Clamp(NPC.Opacity - 0.3f, 0f, 1f);
-                int howManyDashes = Main.masterMode ? 6 : Main.expertMode ? 5 : 3;
+                NPC.Opacity = shouldDecreaseOpacity ? MathHelper.Clamp(NPC.Opacity - 0.3f, 0f, 1f) : 1f;
                 for (int i = 0; i < Main.maxNPCs; i++)
                 {
                     NPC npc = Main.npc[i];
-                    if (npc.active && npc.localAI[0] >= howManyDashes && npc.type == ModContent.NPCType<TheFearedEmpressHandLeft>() || npc.type == ModContent.NPCType<TheFearedEmpressHandLeft>())
+                    if (npc.active && npc.ai[0] == -1 && (npc.type == ModContent.NPCType<TheFearedEmpressHandLeft>() || npc.type == ModContent.NPCType<TheFearedEmpressHandLeft>()))
                     {
                         AttackTimer[0] = 1f;
                         NPC.netUpdate = true;
                     }
                 }
             }
-            else
+
+            if (AttackTimer[0] == 1f)
             {
                 drawHealthBar = true;
                 AttackTimer[1]++;
-                if (AttackTimer[1] >= 120)
+                if (AttackTimer[1] >= 60)
                 {
                     SelectNextAttack(0);
                 }
@@ -731,6 +729,11 @@ namespace Exlight.NPCs.Bosses.TheFearedEmpress
                     NPC.Opacity = MathHelper.Clamp(NPC.Opacity + 0.3f, 0f, 1f);
                 }
             }
+        }
+
+        public void DoHandDashes(Player player)
+        {
+            
         }
 
         public void DoLeftHandSwordSlash(Player player)

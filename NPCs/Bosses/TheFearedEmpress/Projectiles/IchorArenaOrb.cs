@@ -59,10 +59,12 @@ namespace Exlight.NPCs.Bosses.TheFearedEmpress.Projectiles
                 Projectile.timeLeft = 2;
             }
 
-            Projectile.alpha -= 15;
-            if (Projectile.alpha < 0)
+            for (int i = 0; i < 5; i++)
             {
-                Projectile.alpha = 0;
+                Vector2 spawnPos = Projectile.Center + Main.rand.NextVector2Circular(Projectile.width / 2, Projectile.height / 2);
+                Vector2 vel = Vector2.UnitX.RotatedByRandom((float)Math.PI * 2f) * Main.rand.NextFloat(0.25f, 0.95f);
+                Color color = Color.Lerp(Color.Yellow, Color.Orange, Main.rand.NextFloat(0.1f, 1f));
+                ParticleManager.SpawnParticle(new ScaleWithTimeParticle(spawnPos, vel, color, Main.rand.NextFloat(0.2f, 0.3f), Main.rand.Next(180, 190)));
             }
 
             Projectile.localAI[0]++;
