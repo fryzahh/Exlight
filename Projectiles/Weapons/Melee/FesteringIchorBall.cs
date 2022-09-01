@@ -17,7 +17,8 @@ namespace Exlight.Projectiles.Weapons.Melee
         {
             Projectile.width = 23;
             Projectile.height = 23;
-            Projectile.hostile = true;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Melee;
             Projectile.penetrate = 5;
         }
 
@@ -46,10 +47,14 @@ namespace Exlight.Projectiles.Weapons.Melee
                 if (Projectile.velocity.Y >= -7)
                     Projectile.velocity.Y -= 0.85f;
             }
-            Projectile.velocity.Y += 0.3f;
+            Projectile.velocity.Y += 0.1f;
             if (++Projectile.ai[1] == 1)
             {
-                Projectile.scale = Main.rand.NextFloat(0.5f, 1.5f);
+                Projectile.scale = Main.rand.NextFloat(1f, 2f);
+                Projectile.position = Projectile.Center;
+                Projectile.width = (int)(Projectile.width * Projectile.scale);
+                Projectile.height = (int)(Projectile.height * Projectile.scale);
+                Projectile.Center = Projectile.position;
             }
 
             if (Projectile.ai[1] % 10 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
